@@ -111,7 +111,7 @@ export function apply(ctx: Context, config: Config): void {
     name: 'list_games',
     description: 'List all available board games with their metadata.',
     parameters: {},
-    output: { schema: { type: 'object', properties: { games: { type: 'array', items: { type: 'object', properties: { id: { type: 'string' }, name: { type: 'string' }, nameZh: { type: 'string' }, players: { type: 'string' }, time: { type: 'string' }, weight: { type: 'string' }, bggId: { type: 'string' }, image: { type: 'string' }, description: { type: 'string' } }, additionalProperties: false } } }, additionalProperties: false } },
+    output: { schema: { type: 'object', properties: { games: { type: 'array', items: { type: 'object', properties: { id: { type: 'string' }, name: { type: 'string' }, nameZh: { type: 'string' }, players: { type: 'string' }, time: { type: 'string' }, weight: { type: 'string' }, bggId: { type: 'string' }, image: { type: 'string' }, description: { type: 'string' } }, additionalProperties: false } } }, additionalProperties: false }, render(_args: any, value: any) { return [{ type: 'text', text: (value as any).games.map((g: any) => '- **' + g.name + '** (' + g.nameZh + ') — ' + g.players + ' players, ' + g.time).join('\n') }] } },
     execute() { return Promise.resolve({ games: loadGameIndex(dir) }) },
     presentCall: () => ({ card: 'generic', title: 'List games', kind: 'other' }),
   }))
@@ -120,7 +120,7 @@ export function apply(ctx: Context, config: Config): void {
     name: 'search_rulebook',
     description: 'Search the rulebook of a specific game. Returns the most relevant sections.',
     parameters: { gameId: { type: 'string', required: true, description: 'The game ID' }, query: { type: 'string', required: true, description: 'What rule information you need' } },
-    output: { schema: { type: 'object', properties: { sections: { type: 'array', items: { type: 'object', properties: { title: { type: 'string' }, chapter: { type: 'string' }, content: { type: 'string' } }, additionalProperties: false } } }, additionalProperties: false } },
+    output: { schema: { type: 'object', properties: { sections: { type: 'array', items: { type: 'object', properties: { title: { type: 'string' }, chapter: { type: 'string' }, content: { type: 'string' } }, additionalProperties: false } } }, additionalProperties: false }, render(_args: any, value: any) { const v = value as any; return v.sections.length === 0 ? [{ type: 'text', text: 'No matching sections found.' }] : v.sections.map((s: any) => ({ type: 'text', text: '## ' + s.title + '\n' + s.content })) } },
     execute(args: any) {
       const rb = loadRulebook(dir, args.gameId)
       if (!rb) return Promise.resolve({ sections: [] })
@@ -133,7 +133,7 @@ export function apply(ctx: Context, config: Config): void {
     name: 'get_section',
     description: 'Get the full content of a specific rulebook section by its exact title.',
     parameters: { gameId: { type: 'string', required: true, description: 'The game ID' }, sectionTitle: { type: 'string', required: true, description: 'The exact section title' } },
-    output: { schema: { type: 'object', properties: { title: { type: 'string' }, chapter: { type: 'string' }, content: { type: 'string' } }, additionalProperties: false } },
+    output: { schema: { type: 'object', properties: { title: { type: 'string' }, chapter: { type: 'string' }, content: { type: 'string' } }, additionalProperties: false }, render(_args: any, value: any) { const v = value as any; return [{ type: 'text', text: '## ' + v.title + '\n' + v.content }] } },
     execute(args: any) {
       const rb = loadRulebook(dir, args.gameId)
       if (!rb) return Promise.resolve({ title: '', chapter: '', content: 'Rulebook not found.' })

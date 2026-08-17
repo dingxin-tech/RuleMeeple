@@ -140,6 +140,8 @@ export function SidebarRoot({
             <BrandWordmark />
           </button>
         )}
+        {/* RuleMeeple: back to game selection */}
+        <a href="/" title="Back to games" style={{display:'flex',alignItems:'center',justifyContent:'center',width:wide?28:24,height:wide?28:24,borderRadius:6,color:'var(--color-text-secondary)',textDecoration:'none',fontSize:wide?16:14,flexShrink:0}}>←</a>
         {/* Rail resting state is the whale mark; hovering swaps in the panel
             icon (the expand affordance, figma sidebar-hover flow). */}
         <Tooltip label={collapsed ? t('toggle.open') : t('toggle.collapse')} delayMs={500}>
